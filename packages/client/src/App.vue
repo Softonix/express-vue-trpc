@@ -26,34 +26,34 @@ import { computed, reactive } from 'vue';
 import Message from './components/Message.vue';
 import SendMessageForm from './components/SendMessageForm.vue';
 import Error from './components/Error.vue';
-import { useQuery, useMutation, useQueryClient } from 'vue-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
 import { trpc } from './api/trpc';
 import { Form } from './types';
 
 const queryClient = useQueryClient();
 
-const form = reactive({
+const form = reactive<Form>({
   user: '',
-  message: '',
+  message1: ''
 });
 
-const getMessages = () => trpc.query('getMessages');
+const getMessages = () => trpc.query('getMessages', 1)
 const {
   isError: getMessagesHasError,
   isLoading,
   data,
   refetch,
-} = useQuery('getMessages', getMessages, {
+} = useQuery(['getMessage'], getMessages, {
   refetchOnWindowFocus: false,
 });
 
 const addMessage = (form: Form) => trpc.mutation('addMessage', form);
-const { error: addMessageHasError, mutate, reset } = useMutation('addMessage', addMessage);
+const { error: addMessageHasError, mutate, reset } = useMutation(addMessage);
 
 const handleSubmitForm = () => {
   mutate(form, {
     onSuccess: () => {
-      queryClient.invalidateQueries('getMessages');
+      queryClient.invalidateQueries(['getMessages']);
     },
   });
 };

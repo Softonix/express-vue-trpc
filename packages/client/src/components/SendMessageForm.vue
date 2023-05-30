@@ -6,7 +6,7 @@
     </div>
     <div class="send-message-form__message">
       <label for="message">Message:</label>
-      <input type="text" id="message" v-model="form.message" required />
+      <input type="text" id="message" v-model="form.message1" required />
     </div>
     <button type="submit">Add message</button>
   </form>
